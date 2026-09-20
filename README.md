@@ -12,8 +12,8 @@ checklist.
   pressed bevel primitives that make 2D boxes read as 3D without breaking
   the medium.
 - [`references/palette-construction.md`](./references/palette-construction.md)
-  — ramp anatomy, three preset palettes (warm agrarian / cinematic HD-2D /
-  casual character), and a 32-color ceiling rule.
+  — ramp anatomy, four preset palettes (warm agrarian / cinematic HD-2D /
+  casual character / modern soft), and a ceiling of 32 unique colors.
 
 ## What's *not* in the box
 
@@ -27,7 +27,7 @@ checklist.
 
 ## Six first principles
 
-1. **Discretization** — every measurement is a multiple of one unit.
+1. **Discretization** — layout spacing and fine details use compatible grids.
 2. **Restriction** — a small palette commits each color.
 3. **Indexing** — once picked, colors are referenced by index only.
 4. **Stacking** — shading is band-limited, not continuous.

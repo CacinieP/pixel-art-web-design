@@ -11,12 +11,12 @@ A 4-step ramp:
 ramp-1  lightest  — sky / hair highlight / UI glow
 ramp-2  base      — main fill
 ramp-3  shadow    — fold / underside
-ramp-4  deepest   — outline / silhouette (60% darker than ramp-3)
+ramp-4  deepest   — outline / silhouette (darker than the fills)
 ```
 
-A 5-step ramp adds a specular highlight between ramp-1 and ramp-2.
+A 5-step ramp adds a specular highlight lighter than ramp-1.
 
-## Grey ramp (shared by all)
+## Four-step neutral ramp (shared by all)
 
 ```
 ink        #1a1a2e   outline
@@ -27,21 +27,26 @@ paper-soft #e8e2d0   secondary fill
 
 ## Building a palette
 
-1. Decide the family's banding count (2 / 3 / 4 / 5).
+1. Choose the page's maximum shading-band count within the family's range.
+   Simple materials may use fewer bands than the budget allows.
 2. Decide the scene's *mood* (warm / cool / mixed).
 3. Pick one ramp per material (skin, grass, stone, sky, UI accent).
-4. All ramps share the same grey ramp.
-5. Cap at 32 colors total.
+4. All ramps share the same four-step neutral ramp.
+5. Aim for 8–24 unique opaque colors; richer family presets may use up to
+   32. Count a reused color once, even when several tokens refer to it.
+   Shadows also reuse the palette; avoid translucent overlays that introduce
+   additional blended colors.
 
-## Refusal patterns
+## Keeping the palette small
 
 Reuse ramps in different *roles* rather than inventing new colors. If the
-palette is approaching 32, the design is too busy — constrain the brief,
-not the palette.
+palette is approaching 32, reuse or simplify ramps before adding colors.
+Document any user-requested exception to the ceiling in the deliverable README.
 
 ## Sample palette: "Family B · warm agrarian"
 
-A 24-color starting palette for cozy / hand-drawn / tile-grid work.
+A 27-color starting palette for cozy / hand-drawn / tile-grid work.
+The 28 listed entries share `#a06b3a` between wood and skin.
 
 ```
 grey:    #1a1a2e #3a3a55 #f4f1e8 #e8e2d0
@@ -51,8 +56,10 @@ wood:    #d8a26e #a06b3a #653718 #3a1f0a
 skin:    #f4d0a8 #d6a574 #a06b3a #4a2a14
 accent:  #e85a4f #c93f3f #8a2424 #4a0a0a
 gold:    #f7c948 #c89a2a #7d5f15 #3a2a05
-total:   24
+total:   27 unique colors
 ```
+
+Choose a smaller subset when targeting the usual 8–24-color budget.
 
 ## Sample palette: "Family C · cinematic HD-2D"
 
@@ -84,8 +91,8 @@ total:   16
 
 ## Sample palette: "Family D · modern soft"
 
-A 24-color palette for product / app work. Reduced saturation, slight
-warmth, a teal accent ramp.
+A 20-color palette for product / app work. Reduced saturation, slight
+warmth, mint greens, and a coral accent ramp.
 
 ```
 grey:    #1f1f2e #3a3a4a #f0e8d8 #e0d4c0
