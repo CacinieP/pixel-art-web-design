@@ -44,23 +44,31 @@ constraints. These are the *first principles*; every downstream decision
 derives from them.
 
 ### 1.1 Discretization (网格化)
-- Every visible vertical and horizontal edge snaps to a **single base grid**.
-- The grid is the smallest common multiple of every measurement in the design.
-- Default web values: **2px, 4px, or 8px multiples**; pick *one* and never mix.
-- All letter-spacing, icon size, padding, border-radius, shadow-offset, and
-  sprite dimensions are integer multiples of the unit.
+- Use two compatible grids: a **layout unit** (`--unit`, default 4px) for
+  spacing and component sizing, and a **detail pixel** (`--pixel`, default
+  1px) for borders, bevels, letter-spacing, and text line boxes.
+- Choose one layout unit: **2px, 4px, or 8px**. The detail pixel must divide
+  both the unit and half the unit into integers; 1px works for all three.
+- Layout gaps and padding use whole layout units. Fine details and box
+  edges use whole detail pixels; they need not be whole layout units.
+  Component dimensions below assume the default grids; adapt fine details
+  through their tokens when changing `--pixel`.
+- Sprite pixels use one shared integer render scale (§1.3). Responsive
+  containers may change width, but avoid fractional sprite scaling.
 - *Why this is a principle:* the moment two elements sit on different grids,
   the eye reads the seam. Pixel art's clarity comes from the whole frame
   obeying one lattice.
 
 ### 1.2 Restriction (色板约束)
-- A single coherent image uses **8–24 palette entries total**, including
-  outlines, sky, and UI chrome. Across-corpus ceiling: 32.
-- Palette construction is **ramps**, not gradients. A ramp is 3–5 monotonically
-  darkening variants of one hue plus an outline ≈ 60% darker than the darkest
-  fill. Build one ramp per logical material (skin, grass, stone, sky, UI accent).
-- Shared neutrals (outline, paper, ink) come from a *single* 5-step greyscale
-  ramp. The same five greys can appear in every ramp.
+- Aim for **8–24 unique palette colors**, including outlines, sky, and UI
+  chrome; richer families may use up to 32. Count unique color values,
+  not token names: aliases of the same color consume one entry.
+- Palette construction is **ramps**, not gradients. A ramp is typically 3–5
+  light-to-dark variants of one hue, including an outline where used. Build
+  one ramp per logical material (skin, grass, stone, sky, UI accent), then
+  use a subset if the page's shading budget is smaller.
+- Shared neutrals (outline, paper, ink) come from a *single* four-step neutral
+  ramp. The same four neutrals can appear in every material ramp.
 - *Why this is a principle:* a small palette forces the eye to find identity in
   shape and grouping instead of color noise. A 16-color scene reads because
   every color is *committed*.
@@ -76,17 +84,19 @@ derives from them.
   the eye to re-bin the scene.
 
 ### 1.4 Stacking (shading as discrete bands)
-- Shading is **band-limited**, not continuous. A sphere has 3–5 bands, not
-  256. Default ramp order: `base → shade → shadow → highlight → specular`.
-- The band count is decided *once per archetype* and never varies.
-- The darkest pixel of an object is always the outline, except for true
-  silhouettes against pure white sky.
+- Shading is **band-limited**, not continuous. Use 2–5 bands according to
+  the chosen budget, not 256. Order palette ramps from light to dark:
+  `specular → highlight → base → shade → shadow`, omitting unused steps.
+- Choose a maximum shading-band count for the page within the family's
+  range. Simple objects may use fewer bands; no object exceeds that budget.
+- Where an outline is used, keep it at least as dark as the object's deepest
+  fill. Outline-free styles use silhouette contrast instead.
 - *Why this is a principle:* continuous gradients instantly betray the pixel
   medium. Bands read as a deliberate artistic choice.
 
 ### 1.5 Activation (motion discipline)
 - Pixel scenes animate by **sprite-cycle**, not by tween:
-  - Walk cycle: 4 frames at 8fps.
+  - Walk cycle: 2 or 4 frames at 8fps; choose per character and keep consistent.
   - Idle: 2 frames at 1–2 fps, sometimes called "breathing".
   - UI hover: 1 frame, instantaneously (no transition).
   - Pressed: 1 frame, also instantaneous.
@@ -115,19 +125,19 @@ the four sliders below.
 | Family | Sprite (px) | Shading bands | Palette | Vibe |
 |---|---|---|---|---|
 | **A · character MV**       | 32–64 (scalerendered) | 2–3 | 12–16 | character, scene, monochrome wash |
-| **B · agrarian tile**      | 16×16 tile, 4× render | 3–4 | 16–24 | agrarian, warm, hand-drawn |
+| **B · agrarian tile**      | 16×16 tile, 4× render | 3–4 | 16–28 | agrarian, warm, hand-drawn |
 | **C · cinematic HD-2D**    | 32×32, 6–8× render    | 4–5 | 24–32 | cinematic, oil-lit, NPR |
 | **D · modern soft**        | 32×32, 1× render      | 4   | 20–28 | modern, soft-saturation, atmospheric |
 
 ### Sliders to talk through with the user
 
 1. **Shading depth** — number of bands (2 = A / GB, 4 = C).
-2. **Line weight** — outline color saturation: 0 (no outline, NPR) → 100
-   (pure black, default). Default 70.
+2. **Outline strength** — 0 (no outline, NPR) → 100 (strongest contrast in
+   the chosen palette). Default 70; deep indigo is the default outline.
 3. **Animation budget** — 0 (static), 1 (cursor blink only), 4 (full sprite
    cycles), 8 (animated background).
 4. **Light source** — fixed 45° top-left (default), 45° top-right (East),
-   bottom (noon), cinematic (3-point).
+   bottom (underlighting), cinematic (3-point).
 
 Pick defaults for sliders the user has no opinion on. Do not ask.
 
@@ -140,11 +150,12 @@ constrains the ones below it.
 
 ```css
 :root {
-  /* 1. Unit — single number every measurement is a multiple of */
+  /* 1. Compatible layout and detail grids */
   --unit: 4px;          /* 2 / 4 / 8 — pick one */
+  --pixel: 1px;         /* divides --unit and --unit / 2 */
 
   /* 2. Grid dimensions — every component snaps to these */
-  --tile: calc(var(--unit) * 8);              /* 32px — sprite panel */
+  --tile: 32px;                             /* source sprite cell size */
   --gutter: calc(var(--unit) * 2);            /* 8px */
   --rhythm: calc(var(--unit) * 4);            /* 16px — paragraph gap */
 
@@ -166,7 +177,7 @@ constrains the ones below it.
   --grass-1:    #8fce6b;
   --grass-2:    #5fa73e;
   --grass-3:    #2f6b22;
-  --shadow:     #00000044; /* 27% black, never pure black for shadows */
+  --shadow:     var(--ink-soft); /* opaque palette alias; no extra color */
 
   /* 4. Typography — pixel font, integer line-heights */
   --font-pixel: 'Press Start 2P', 'VT323', 'Pixelify Sans', monospace;
@@ -176,27 +187,35 @@ constrains the ones below it.
   --lh-tight: 1;     /* headings */
   --lh-body:  1.5;
 
-  /* 5. Borders — 1px logical, always alias to integer at render scale */
-  --bw-thin: 1px;
-  --bw-thick: calc(var(--unit) / 2);  /* 2 */
-  --bevel-light: inset  2px  2px 0 0 var(--paper-soft),
-                 inset -2px -2px 0 0 var(--ink);
-  --bevel-dark:  inset  2px  2px 0 0 var(--ink),
-                 inset -2px -2px 0 0 var(--paper-soft);
+  /* 5. Detail geometry; shadows have zero blur */
+  --bw-thin: var(--pixel);
+  --bw-thick: calc(var(--pixel) * 2);
+  --bevel-offset: calc(var(--pixel) * 2);
+  --shadow-raised: var(--unit);
+  --shadow-pressed: calc(var(--unit) / 2);
+  --press-offset: calc(var(--shadow-raised) - var(--shadow-pressed));
+  --bevel-raised:
+    inset var(--bevel-offset) var(--bevel-offset) 0 0 var(--paper-soft),
+    inset calc(-1 * var(--bevel-offset)) calc(-1 * var(--bevel-offset)) 0 0 var(--ink);
+  --bevel-pressed:
+    inset var(--bevel-offset) var(--bevel-offset) 0 0 var(--ink),
+    inset calc(-1 * var(--bevel-offset)) calc(-1 * var(--bevel-offset)) 0 0 var(--paper-soft);
 
   /* 6. Sprite scale — render scale (LOD commitment) */
-  --sprite-scale: 4;   /* if family is B, scale=4 sprite=16 */
+  --sprite-scale: 4;   /* generic 32px example; family B uses --tile: 16px */
+  --sprite-size: calc(var(--tile) * var(--sprite-scale)); /* 128px */
 }
 ```
 
 ### Mandatory defaults if any of the above is missing
 
 - `--unit` must be chosen first. **Pick 4px by default** for web.
-- `--ink:#1a1a2e` (deep indigo, not `#000`). Pure black is endless and
-  transparent; deep indigo reads as "drawn".
+- `--ink:#1a1a2e` (deep indigo) gives outlines a softer, drawn appearance.
 - `--paper` must be warm (`#f4f1e8`) unless the brief explicitly says cool.
 - Accent ratios: sky/ramp = 4, accent/ramp = 3, gold/ramp = 3, grass/ramp = 3.
-- Total palette ceiling: **32 hex codes including neon / shadow variants**.
+- Total palette ceiling: **32 unique opaque colors including shadow colors**.
+  Reuse tokens for shadows; translucent overlays create extra blended colors.
+  See `references/palette-construction.md` for counts and family presets.
 
 ---
 
@@ -217,29 +236,32 @@ the grid. Every component respects the bevel convention (see
 ```css
 .sprite-frame { display: inline-block; background: var(--sky-1);
   border: var(--bw-thick) solid var(--ink);
-  padding: var(--gutter); box-shadow: var(--bevel-dark); }
-.sprite-frame img { image-rendering: pixelated;
-  image-rendering: crisp-edges; }
+  padding: var(--gutter); box-shadow: var(--bevel-pressed); }
+.sprite-frame img { width: var(--sprite-size); height: var(--sprite-size);
+  image-rendering: crisp-edges;
+  image-rendering: pixelated; }
 ```
 `image-rendering: pixelated` is **non-negotiable** for any sprite asset.
 
 ### 4.2 Panel (the box primitive)
-- Outer = 1px bevel-dark.
-- Inner = 1px bevel-light offset by 2px.
-- Drop shadow = 4px down, 4px right, color `--shadow`.
+- Outer = `--bw-thin` outline in `--ink`.
+- Inner = `--bevel-raised` (light upper-left, dark lower-right).
+- Drop shadow = `--shadow-raised` down/right, color `--shadow`, zero blur.
 
 ### 4.3 Button (clickable Panel)
 - 3 visual states, none of them transition:
-  - **Rest**: bevel-dark inset.
-  - **Hover**: outline color shifts to `--accent-1` only.
-  - **Active**: bevel-light inset, offset +2px down/right.
+  - **Rest**: `--bevel-raised` with `--shadow-raised` drop-shadow offset.
+  - **Hover / focus-visible**: outline shifts to `--accent-1`; keep raised.
+  - **Active**: `--bevel-pressed`, move down/right by `--press-offset`, and
+    reduce the drop-shadow offset to `--shadow-pressed`.
 - No CSS `transition` on bevel — instant flips only.
 
 ### 4.4 ProgressBar
-- 8px wide, 1px outline, 6 fill steps that animate by toggling classes.
+- 8px high, width in layout units, `--bw-thin` outline. Six fill steps
+  toggle classes; choose an interior width divisible by six detail pixels.
 
 ### 4.5 DialogBox (modal)
-- 100% width on mobile, 480px on desktop, 1px outline, 4px drop shadow,
+- 100% width on mobile, 480px on desktop, `--bw-thin` outline and raised shadow,
   positioned below a 32×32 talking-head sprite.
 - Mandatory NPC head: top-left of the box, 32×32 sprite.
 
@@ -249,10 +271,12 @@ the grid. Every component respects the bevel convention (see
 
 ### 4.7 HudBar (top-left hearts / top-right currency)
 - 8×8 icon, 1px gap, repeated N times.
-- Pairs of icons may stretch to fill but never re-tile.
+- Distribute icon groups to fill available space; never stretch the icons
+  themselves or change their shared integer scale.
 
 ### 4.8 WindowChrome (title bar + resize affordance)
-- 16px title bar with `── 标题 ──` formatting using gold gradient text.
+- 16px title bar with `── 标题 ──` formatting using solid `--gold-1` text.
+  Optional gold shading uses discrete palette bands, never smooth gradients.
 - Close button: 8×8 red square, 1px outline, hover = light to dark.
 
 ---
@@ -267,8 +291,8 @@ the grid. Every component respects the bevel convention (see
 - Body copy: max width `60ch`, paragraph gap `var(--rhythm)`.
 - Numbers always monospace tabular alignment; never proportional figures
   in HUDs.
-- Color choices: prefer 1 ink + 1 paper + 1 accent per text block. Adding
-  a second accent costs the design two indices of palette budget.
+- Color choices: prefer 1 ink + 1 paper + 1 accent per text block. Reusing
+  an existing accent costs no extra palette entry; count each new color once.
 
 ---
 
@@ -276,8 +300,8 @@ the grid. Every component respects the bevel convention (see
 
 Allowed only:
 1. **Frame swap** (`steps(1)` or discrete class toggle).
-2. **2-frame walk cycle** at 8fps.
-3. **3-frame water shimmer** at 6fps.
+2. **2- or 4-frame walk cycle** at 8fps; **2-frame idle** at 1–2fps.
+3. **2- or 3-frame flower / flame / water shimmer** at 4–6fps.
 4. **Cursor blink** at 1.5fps.
 5. **Slide / fade** only as a single discrete state change; never `ease`.
 
@@ -291,18 +315,19 @@ Sprite sheet layout:
 +------+------+------+------+
 | 00   | 01   | 02   | 03   |   ← walk cycle
 +------+------+------+------+
-| 10   | 11   | 12   | 13   |   ← idle
+| 10   | 11   |      |      |   ← 2-frame idle; remaining cells unused
 +------+------+------+------+
 ```
-Each cell is exactly `tile × tile` pixels. The 32×32 sprite at 4× render
-becomes a 128×128 cell.
+Each source cell is exactly `--tile × --tile` pixels. A 32×32 source cell
+displayed at 4× occupies 128×128 CSS pixels; the source sheet stays unscaled.
+For a two-frame walk, use only the first two cells of its row.
 
 ---
 
 ## 7 · Accessibility & responsive
 
-- WCAG-AA contrast is achievable *only* if the palette is built from ramps;
-  sample contrast before shipping.
+- Ramps help select contrasting pairs but do not guarantee accessibility;
+  measure each text/background pairing against the thresholds in §8.
 - All hover-equivalent states must have a focus equivalent.
 - Cursor must be a visible pixel cursor (1px outline, 5×5 box) — never
   `cursor: default`.
@@ -314,12 +339,17 @@ becomes a 128×128 cell.
 
 ## 8 · Validation checklist (run before delivery)
 
-Run through these in order. Every item must pass.
+Run through these in order. Every item must pass unless the user's brief
+explicitly requires a documented exception (§11).
 
-- [ ] All measurements are integer multiples of `--unit`.
-- [ ] Total palette ≤ 32 colors; ≤ 8 ramps; one shared grey ramp.
+- [ ] Layout spacing uses whole `--unit` increments; fine details and text
+      line boxes use whole `--pixel` increments. Sprite scale is an integer.
+- [ ] Total palette ≤ 32 unique opaque colors; ≤ 8 ramps; one shared
+      four-step neutral ramp. Token aliases count once.
 - [ ] Every sprite uses `image-rendering: pixelated` (or `crisp-edges`).
 - [ ] All sprites render at the same scale (no mixed LODs).
+- [ ] Buttons use raised bevels at rest and pressed bevels while active;
+      shadows use the matching offset token and zero blur.
 - [ ] No `transition-duration` longer than 0 between visual states.
 - [ ] Every animation is a discrete frame swap, never a tween.
 - [ ] Body text contrast ≥ 4.5:1; large text ≥ 3:1.
@@ -337,15 +367,16 @@ my-pixel-site/
 ├── index.html          # uses the tokens from §3
 ├── tokens.css          # the variables from §3
 ├── components.css      # the eight primitives from §4
-├── sprites/            # PNG sprite sheets, scaled to LOD
+├── sprites/            # PNG source sheets; integer scaling happens in CSS
 │   ├── hero-sheet.png
 │   └── buttons-sheet.png
 ├── fonts/              # pixel font(s) used
 └── README.md           # the archetype family picked, the four sliders, the palette
 ```
 
-`README.md` must record: archetype family, the four slider values, the palette
-swatch list, the sprite scale, and any deviations from the defaults and why.
+`README.md` must record: archetype family, the four slider values, layout and
+detail grids, palette swatches and unique count, source tile size, sprite
+scale, and any deviations from the defaults and why.
 
 ---
 
@@ -361,21 +392,25 @@ If the user brings a Y2KDiary / pixel-art asset folder (e.g.
 
 ---
 
-## 11 · Anti-patterns (refuse these)
+## 11 · Anti-patterns
 
-These decisions *break* the DNA. Refuse them, even when the user asks:
+Avoid these by default to preserve the pixel-art grammar. If the user
+explicitly chooses an exception, explain the visual tradeoff and record it
+in the deliverable README; the user's brief takes precedence.
 
 1. **Gradient fills** (any continuous color tool).
-2. **Drop shadows with blur** > 0px (use 1px offset solid shadows only).
+2. **Drop shadows with blur** > 0px (use solid shadows with the raised or
+   pressed offset token).
 3. **Border-radius** > 0 on anything other than sprite content (corners
    must be 0 or a step).
 4. **Mixing pixel font with a system font** — pick one family.
 5. **Anti-aliased icon sets** imported into a pixel page.
-6. **Vector icons that scale** — they will betray the medium at every
-   resolution transition.
+6. **Vector icons at fractional scales** — crisp SVG sprites are allowed
+   at integer coordinates and integer scales (Appendix B).
 7. **CSS transitions on opacity** for hover/active states — they read as
    web-native, not pixel.
-8. **A glossy / skeuomorphic panel system** — the medium is flat.
+8. **Smooth glossy panel shading** — simple raised/pressed pixel bevels
+   are the supported depth cue.
 9. **Photography as accent** — photography belongs in a full-photo style.
    Mixed-media disables the pixel grammar.
 
