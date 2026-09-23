@@ -4,11 +4,11 @@
 
 这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。它提供设计流程和代码模式，不包含可直接启动的网站、字体或图片素材。
 
-[公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [GitHub Release（需访问权限）](https://github.com/CacinieP/pixel-art-web-design/releases/latest) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
+[公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
 
 ## 快速安装：选择你的 Agent
 
-使用第三方 [skills CLI](https://github.com/vercel-labs/skills) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 AtomGit 仓库，无需登录、Token 或仓库授权，默认安装 `main`。需要固定版本时，可使用下文的按版本克隆方式。
+使用第三方 [skills CLI](https://www.skills.sh/docs/cli) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 AtomGit 仓库，无需登录、Token 或仓库授权，默认安装 `main`。需要固定版本时，可使用下文的按版本克隆方式。
 
 **交互选择要安装到哪些 Agent：**
 
@@ -34,7 +34,7 @@ npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g -a pi cod
 npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g --all
 ```
 
-`-g` 表示用户级安装，所有项目可用；去掉它则安装到当前项目。`--all` 会为 CLI 支持的所有 Agent 写入技能目录，即使某些 Agent 尚未安装；仅使用少数工具时，选交互模式或 `-a`。这不是对所有现有或未来 Agent 的兼容保证，完整支持列表以 [CLI 文档](https://github.com/vercel-labs/skills#supported-agents) 为准。
+`-g` 表示用户级安装，所有项目可用；去掉它则安装到当前项目。`--all` 会为 CLI 支持的所有 Agent 写入技能目录，即使某些 Agent 尚未安装；仅使用少数工具时，选交互模式或 `-a`。这不是对所有现有或未来 Agent 的兼容保证，支持的 Agent 以 [官方列表](https://www.skills.sh/agent) 为准。
 
 ### AtomCode：直接安装
 
@@ -48,20 +48,7 @@ git clone https://atomgit.com/Cacinie/pixel-art-web-design.git \
   "${ATOMCODE_HOME:-$HOME/.atomcode}/skills/pixel-art-web-design"
 ```
 
-如需从仍为私有的 GitHub 仓库安装，且已通过 `gh auth login` 登录有权限的账号，第二步可改为：
-
-```bash
-gh repo clone CacinieP/pixel-art-web-design \
-  "${ATOMCODE_HOME:-$HOME/.atomcode}/skills/pixel-art-web-design"
-```
-
-**离线安装**：下载 Release ZIP，将整个 `pixel-art-web-design/` 文件夹解压到 `${ATOMCODE_HOME:-$HOME/.atomcode}/skills/`。默认安装结果应为 `~/.atomcode/skills/pixel-art-web-design/SKILL.md`，并保留同层 `references/`。
-
-```bash
-mkdir -p "${ATOMCODE_HOME:-$HOME/.atomcode}/skills"
-unzip ~/Downloads/pixel-art-web-design-v1.0.1.zip \
-  -d "${ATOMCODE_HOME:-$HOME/.atomcode}/skills"
-```
+**ZIP 安装**：在 [AtomGit 仓库](https://atomgit.com/Cacinie/pixel-art-web-design) 点击“下载zip”。解压后，将直接包含 `SKILL.md` 和 `references/` 的文件夹重命名为 `pixel-art-web-design`，再将整个文件夹放入 `${ATOMCODE_HOME:-$HOME/.atomcode}/skills/`。默认安装结果应为 `~/.atomcode/skills/pixel-art-web-design/SKILL.md`，并保留同层 `references/`。
 
 Windows 可将文件夹放入 `%USERPROFILE%\.atomcode\skills\`；若已设置 `ATOMCODE_HOME`，则使用该目录下的 `skills`。上述克隆命令用于首次安装；已有同名目录时请按“更新与卸载”操作。
 
@@ -82,24 +69,10 @@ npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 git clone --branch v1.0.1 --depth 1 https://atomgit.com/Cacinie/pixel-art-web-design.git
 ```
 
-### 可选：从 GitHub 私有仓库安装
+## 从 AtomGit 源码 ZIP 安装：无需 Node.js 或 Git
 
-GitHub 仓库和其 Release 附件仍需要访问权限。仅当你选择 GitHub 来源时，才需要登录有权限的账号：
-
-```bash
-gh auth login
-gh repo clone CacinieP/pixel-art-web-design
-npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
-```
-
-没有 GitHub 权限时，直接使用上面的 AtomGit 公开源即可。
-
-## 从 Release ZIP 安装：无需 Node.js
-
-此处是 GitHub Release 附件的安装方式，下载仍需 GitHub 仓库访问权限。无需登录的安装请使用上面的 AtomGit 克隆方式；AtomCode 直接克隆也无需 Node.js。
-
-1. 使用有权限的 GitHub 账号打开 [Releases](https://github.com/CacinieP/pixel-art-web-design/releases)，下载附件 `pixel-art-web-design-v1.0.1.zip`。
-2. 解压，得到 `pixel-art-web-design/` 文件夹。
+1. 打开 [AtomGit 公开仓库](https://atomgit.com/Cacinie/pixel-art-web-design)，在代码页点击“下载zip”。默认下载当前分支源码；需要固定版本时，先切换到目标标签。
+2. 解压，将直接包含 `SKILL.md` 和 `references/` 的文件夹重命名为 `pixel-art-web-design`。下载的文件名和解压目录可能带有分支名或版本后缀，以实际内容为准。
 3. 将**整个文件夹**放入下表中目标 Agent 的技能目录，保留 `references/`。
 4. 在 Agent 中重新加载技能或开始新会话，再按下文调用。
 
@@ -114,15 +87,15 @@ npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 | OpenCode | `~/.config/opencode/skills/` | `.agents/skills/` |
 | Cursor | `~/.cursor/skills/` | `.agents/skills/` |
 | Gemini CLI | `~/.gemini/skills/` | `.agents/skills/` |
-| GitHub Copilot | `~/.copilot/skills/` | `.agents/skills/` |
+| Copilot | `~/.copilot/skills/` | `.agents/skills/` |
 
-AtomCode 使用上面的直接安装方式；其他工具的批量安装映射见 [skills CLI 支持列表](https://github.com/vercel-labs/skills#supported-agents)。`~` 表示用户主目录；Windows 可在资源管理器中使用 `%USERPROFILE%`，再按对应路径创建文件夹。Pi 也支持共享的 `~/.agents/skills/` 和项目 `.agents/skills/`，已有共享安装时无需重复复制。
+AtomCode 使用上面的直接安装方式；CLI 支持的其他工具见 [支持的 Agent](https://www.skills.sh/agent)。`~` 表示用户主目录；Windows 可在资源管理器中使用 `%USERPROFILE%`，再按对应路径创建文件夹。Pi 也支持共享的 `~/.agents/skills/` 和项目 `.agents/skills/`，已有共享安装时无需重复复制。
 
-例如，macOS / Linux 下载 ZIP 后安装到 Pi：
+例如，macOS / Linux 按上述步骤解压并重命名后，在该文件夹的上级目录执行以下命令安装到 Pi（目标同名文件夹应不存在）：
 
 ```bash
 mkdir -p ~/.pi/agent/skills
-unzip ~/Downloads/pixel-art-web-design-v1.0.1.zip -d ~/.pi/agent/skills
+cp -R ./pixel-art-web-design ~/.pi/agent/skills/
 ```
 
 正确结构如下，不能只复制 `SKILL.md`，也不要额外嵌套一层同名文件夹：
@@ -159,7 +132,7 @@ unzip ~/Downloads/pixel-art-web-design-v1.0.1.zip -d ~/.pi/agent/skills
 /skill:pixel-art-web-design 帮我做一个咖啡店的像素风落地页，暖色农场风，纯 HTML + CSS，适配手机。
 ```
 
-输入 `/skill:` 后应能看到技能补全。Pi 的加载与调用规则见 [官方 Skills 文档](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/skills.md)。
+输入 `/skill:` 后应能看到技能补全。Pi 的加载与调用规则见 [官方 Skills 文档](https://pi.dev/docs/latest/skills)。
 
 ### Codex
 
@@ -200,7 +173,7 @@ Claude Code 可使用 `/pixel-art-web-design`。其他 Agent 可以在提示中�
 - **本地克隆安装（跟随 main）**：先在仓库目录执行 `git pull --ff-only` 获取远程更新，再重新运行本地 `skills add` 命令。
 - **AtomCode 直接克隆安装（跟随 main）**：在其 `skills/pixel-art-web-design/` 目录执行 `git pull --ff-only` 即可，无需再运行 `skills add`。
 - **固定 Tag 安装**：下载或克隆目标新版本后重新安装；固定 Tag 的检出不使用 `git pull` 更新。
-- **ZIP 安装**：下载新版 Release，备份并移走原技能文件夹，再放入新版，避免新旧参考文件混用。
+- **ZIP 安装**：从 AtomGit 下载最新源码 ZIP，备份并移走原技能文件夹，再放入新版，避免新旧参考文件混用。
 - **CLI 卸载**：使用下面的命令，仅移除这个技能：
 
 ```bash
@@ -211,13 +184,13 @@ npx skills remove pixel-art-web-design -g -a '*'
 
 ## 常见问题
 
-**下载显示 404 或要求登录？** AtomGit 公开源无需登录，请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git`。如果使用的是 GitHub 私有仓库或 Release 附件，则需要有权限的 GitHub 账号；也可以改用 AtomGit 安装命令。
+**克隆失败或要求登录？** 本仓库为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git`，并确认网络可以访问 AtomGit。
 
 **Agent 找不到技能？** 检查安装作用域、目录层级、文件名 `SKILL.md`，以及是否需要重新加载。Pi 使用 `/reload`；其他工具可重开会话，仍未刷新时重启客户端。
 
 **Pi 没有 `/skill:` 命令补全？** 检查 Pi 设置中的 `enableSkillCommands` 是否开启；关闭补全时仍可尝试输入完整命令，详见 Pi 官方文档。
 
-**符号链接安装失败？** 给 `skills add` 添加 `--copy`，或直接使用 Release ZIP 手动安装。
+**符号链接安装失败？** 给 `skills add` 添加 `--copy`，或直接使用 AtomGit 源码 ZIP 手动安装。
 
 **`skills --all` 后 AtomCode 仍找不到？** CLI 1.7.0 尚未包含 AtomCode 目标，请使用本页的 AtomCode 直接安装步骤。
 
@@ -229,7 +202,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 - [`references/bevel-system.md`](./references/bevel-system.md)：凸起 / 按下两种像素倒角与阴影规则。
 - [`references/palette-construction.md`](./references/palette-construction.md)：色阶构建、四组预设色板与颜色数量约束。
 
-源码维护在 `main`；版本 ZIP 作为 Release 附件发布，不再提交到主分支。
+源码维护在 AtomGit 的 `main` 分支，固定版本通过标签提供；源码 ZIP 可从仓库代码页下载，不提交到主分支。
 
 ## License
 
