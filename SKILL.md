@@ -277,7 +277,10 @@ the grid. Every component respects the bevel convention (see
 ### 4.8 WindowChrome (title bar + resize affordance)
 - 16px title bar with `── 标题 ──` formatting using solid `--gold-1` text.
   Optional gold shading uses discrete palette bands, never smooth gradients.
-- Close button: 8×8 red square, 1px outline, hover = light to dark.
+- Close button artwork: 8×8 red square, 1px outline, hover = light to dark.
+  Place it inside a native `<button>` with an accessible name and a hit
+  area of at least 24×24 CSS px; prefer 44×44 for touch. The artwork size
+  does not limit the interactive target size or title bar height.
 
 ---
 
@@ -329,8 +332,9 @@ For a two-frame walk, use only the first two cells of its row.
 - Ramps help select contrasting pairs but do not guarantee accessibility;
   measure each text/background pairing against the thresholds in §8.
 - All hover-equivalent states must have a focus equivalent.
-- Cursor must be a visible pixel cursor (1px outline, 5×5 box) — never
-  `cursor: default`.
+- A custom pixel cursor is optional. Preserve appropriate native cursor
+  fallbacks and visible keyboard focus; never hide the pointer without a
+  usable replacement.
 - Mobile: integer scale-down; never re-tile at half pixel offsets.
 - Reduce-motion: disable sprite cycles, freeze at frame 0, replace cursors
   with static equivalents.
@@ -354,6 +358,8 @@ explicitly requires a documented exception (§11).
 - [ ] Every animation is a discrete frame swap, never a tween.
 - [ ] Body text contrast ≥ 4.5:1; large text ≥ 3:1.
 - [ ] Hover state has a focus equivalent.
+- [ ] Interactive controls have accessible names and usable hit areas;
+      small pixel artwork does not force small click targets (§4.8).
 - [ ] `_trash` artifacts are not present (use `trash` only).
 
 ---
@@ -418,11 +424,10 @@ in the deliverable README; the user's brief takes precedence.
 
 ## 12 · When the brief is *not* pixel art
 
-If the user wants:
-- **Y2K without pixel grid** → use the `taste` skill; this SOP ends.
-- **Retro 90s web (Mosaic / table layouts)** → use the `taste` skill.
-- **Flat modern web** → use the `taste` skill.
-- **3D / VR / AR** → use the `taste` skill.
+For **Y2K without a pixel grid**, **retro 90s web**, **flat modern web**, or
+**3D / VR / AR**, stop applying the pixel-specific rules. Continue using the
+agent's normal design workflow, or an appropriate installed design skill.
+No additional skill is required to use this package.
 
 The pixel-art medium is a *contract with the eye*. If the user only wants
 "retro vibes" without committing to the grid, the result will be a forgery
@@ -453,11 +458,14 @@ brand.
 The web is a hostile medium for pixel art: sub-pixel rendering, fractional
 scaling, high DPI displays, font hinting. The SOP survives because:
 
-1. `image-rendering: pixelated` disables browser bilinear when the user
-   allows it. Always set it.
-2. CSS `pixel` units snap to device pixels at integer scales.
-3. `crisp-edges` is the fallback for browsers that ignore `pixelated`.
+1. Set `image-rendering: pixelated` for enlarged sprites and inspect the
+   result in the target browsers; raster rendering can vary by browser.
+2. Integer CSS `px` dimensions do not guarantee device-pixel alignment.
+   Display pixel ratio and browser zoom also affect the result; test both.
+3. Declare `image-rendering: crisp-edges` before `pixelated` as a fallback.
 4. SVG can be used in place of bitmap sprites but only with `shape-rendering:
    crispEdges` and only at integer coordinates.
-5. Variable fonts can keep pixel hints by using `font-smooth: never` and
-   `font-variant-ligatures: none`.
+5. Load a suitable pixel font and inspect it at the intended sizes.
+   `font-variant-ligatures: none` can disable ligatures, but does not control
+   smoothing. Do not rely on the non-standard `font-smooth` property for
+   portable pixel rendering.
