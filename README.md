@@ -4,7 +4,7 @@
 
 这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。它提供设计流程和代码模式，不包含可直接启动的网站、字体或图片素材。
 
-[公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
+[公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [公开镜像（GitHub）](https://github.com/CacinieP/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
 
 ## 快速安装：选择你的 Agent
 
@@ -61,6 +61,12 @@ git clone https://atomgit.com/Cacinie/pixel-art-web-design.git
 npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 ```
 
+无法访问 AtomGit 时，可改用同样公开的 GitHub 镜像，`main` 内容与 AtomGit 一致：
+
+```bash
+git clone https://github.com/CacinieP/pixel-art-web-design.git
+```
+
 要安装到 CLI 支持的所有 Agent，将最后的 `-a pi codex claude-code opencode -y` 换为 `--all`；AtomCode 使用上面的直接安装步骤。
 
 **固定到已发布版本**：将第一条克隆命令替换为下面这条，再从本地目录安装。固定版本不会自动跟随 `main` 更新。
@@ -68,6 +74,8 @@ npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 ```bash
 git clone --branch v1.0.1 --depth 1 https://atomgit.com/Cacinie/pixel-art-web-design.git
 ```
+
+该标签在 GitHub 镜像上同样可用，可将地址替换为 `https://github.com/CacinieP/pixel-art-web-design.git`。
 
 ## 从 AtomGit 源码 ZIP 安装：无需 Node.js 或 Git
 
@@ -184,7 +192,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 
 ## 常见问题
 
-**克隆失败或要求登录？** 本仓库为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git`，并确认网络可以访问 AtomGit。
+**克隆失败或要求登录？** AtomGit 仓库与 GitHub 镜像均为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git` 或 `https://github.com/CacinieP/pixel-art-web-design.git`，并确认网络可以访问对应站点。
 
 **Agent 找不到技能？** 检查安装作用域、目录层级、文件名 `SKILL.md`，以及是否需要重新加载。Pi 使用 `/reload`；其他工具可重开会话，仍未刷新时重启客户端。
 
@@ -202,7 +210,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 - [`references/bevel-system.md`](./references/bevel-system.md)：凸起 / 按下两种像素倒角与阴影规则。
 - [`references/palette-construction.md`](./references/palette-construction.md)：色阶构建、四组预设色板与颜色数量约束。
 
-源码维护在 AtomGit 的 `main` 分支，固定版本通过标签提供；源码 ZIP 可从仓库代码页下载，不提交到主分支。
+源码维护在 AtomGit 的 `main` 分支，并同步公开镜像到 [GitHub](https://github.com/CacinieP/pixel-art-web-design)；固定版本通过标签提供；源码 ZIP 可从任一仓库的代码页下载，不提交到主分支。
 
 ## License
 
