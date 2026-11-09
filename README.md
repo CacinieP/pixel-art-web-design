@@ -4,68 +4,42 @@
 
 这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。它提供设计流程和代码模式，不包含可直接启动的网站、字体或图片素材。
 
-[开源仓库（GitHub）](https://github.com/CacinieP/pixel-art-web-design) · [在线游玩（GitHub Pages）](https://caciniep.github.io/pixel-art-web-design/) · [公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
+[开源仓库（GitHub）](https://github.com/CacinieP/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
 
-## 可玩游戏：萤灯邮差 · Lantern Post
+## 使用示例
 
-本仓库现在包含一个按上述 SOP 完成的原创像素风投递游戏。暮色群岛失去了光，玩家扮演邮差，在三条邮路中找回 9 封信、投递到同色邮箱、选择护符升级，并点亮最终灯塔。游戏包含迷雾团敌人、冲刺无敌、灯芯生命、暂停、胜负结算、重新开始、本地最佳纪录、触屏方向键、程序化芯片音效与减少动效模式。
+[萤灯邮差 · Lantern Post](https://github.com/CacinieP/lantern-post) 是用本技能构建的像素风游戏，已拆分到独立仓库。
 
-在线游玩：<https://caciniep.github.io/pixel-art-web-design/>（GitHub Pages，桌面与移动端均可）。
+[在线游玩](https://caciniep.github.io/lantern-post/) · [游戏源码与预览](https://github.com/CacinieP/lantern-post)
 
-![桌面端预览](docs/preview-desktop.png)
-
-<img src="docs/preview-mobile.png" width="320" alt="移动端预览：触屏方向键与冲/投按钮">
-
-```bash
-pnpm dev      # http://127.0.0.1:5173
-pnpm test     # 核心规则与可达性测试
-pnpm build    # 生成 sprites/ 与 dist/
-```
-
-操作：WASD / 方向键移动，E / 空格投递，Shift 冲刺，P 暂停。移动端使用画面上的方向键与「冲 / 投」按钮。
-
-### 设计规格
-
-- **风格基底**：Family B · 暖色瓦片，改为暮色群岛氛围；16×16 源瓦片，统一 2× 整数渲染。
-- **四个滑块**：色阶深度 4；轮廓强度 70；动画预算 8（精灵循环、水波、萤石、粒子）；光源固定左上 45°。
-- **网格**：布局单位 `--unit: 4px`，细节像素 `--pixel: 1px`，槽位 `--tile: 16px`，间距 8px / 16px。
-- **色板（20 个不透明色）**：
-  - 中性：`#1a1a2e` `#3a3a55` `#f4f1e8` `#e8e2d0`
-  - 海雾：`#bfe3d0` `#6fb7a5` `#3d8078` `#245055`
-  - 琥珀：`#ffe6a3` `#f2c14e` `#c98a3a` `#7a5230`
-  - 珊瑚：`#ffb08a` `#e86a5a` `#b23a48` `#6e2740`
-  - 苔叶：`#d4e39a` `#94b86a` `#5a8055` `#335043`
-- **字体**：Fusion Pixel 12px proportional（简体中文，OFL，见 `fonts/OFL.txt` 与 `fonts/LICENSES/`）。
-- **精灵**：`sprites/world-atlas.png` 与 `sprites/postmaster.png` 由 `tools/build-sprites.mjs` 从索引色像素绘制生成；Canvas 与 img 均使用 `image-rendering: pixelated`。
-- **组件**：Panel、Button、ProgressBar、DialogBox、InventorySlot、HudBar、WindowChrome、SpriteFrame 均使用零模糊倒角与即时状态切换。
-- **默认偏离**：为让游戏视口在桌面与手机保持整数像素缩放，精灵渲染采用 2× 而非 Family B 默认 4×；场景使用暮色冷海 + 暖琥珀/珊瑚，而非纯农场暖色；模态背景使用不透明墨色以避免额外混色。
+本仓库只维护一个设计技能及其参考文档，不包含游戏代码、字体、精灵素材或游戏部署流程。
 
 ## 快速安装：选择你的 Agent
 
-使用第三方 [skills CLI](https://www.skills.sh/docs/cli) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 AtomGit 仓库，无需登录、Token 或仓库授权，默认安装 `main`；GitHub 开源仓库 `https://github.com/CacinieP/pixel-art-web-design.git` 可直接替换来源地址。需要固定版本时，可使用下文的按版本克隆方式。
+使用第三方 [skills CLI](https://www.skills.sh/docs/cli) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 GitHub 仓库，无需登录、Token 或仓库授权，默认安装 `main`。需要固定版本时，可使用下文的按版本克隆方式。
 
 **交互选择要安装到哪些 Agent：**
 
 ```bash
-npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g
+npx skills add https://github.com/CacinieP/pixel-art-web-design.git -g
 ```
 
 **只安装到 Pi：**
 
 ```bash
-npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g -a pi -y
+npx skills add https://github.com/CacinieP/pixel-art-web-design.git -g -a pi -y
 ```
 
 **同时安装到常用 Agent：**
 
 ```bash
-npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g -a pi codex claude-code opencode -y
+npx skills add https://github.com/CacinieP/pixel-art-web-design.git -g -a pi codex claude-code opencode -y
 ```
 
 **安装到 skills CLI 支持的所有 Agent：**
 
 ```bash
-npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g --all
+npx skills add https://github.com/CacinieP/pixel-art-web-design.git -g --all
 ```
 
 `-g` 表示用户级安装，所有项目可用；去掉它则安装到当前项目。`--all` 会为 CLI 支持的所有 Agent 写入技能目录，即使某些 Agent 尚未安装；仅使用少数工具时，选交互模式或 `-a`。这不是对所有现有或未来 Agent 的兼容保证，支持的 Agent 以 [官方列表](https://www.skills.sh/agent) 为准。
@@ -74,31 +48,25 @@ npx skills add https://atomgit.com/Cacinie/pixel-art-web-design.git -g --all
 
 AtomCode 使用自己的技能目录。截至本次验证使用的 `skills` CLI 1.7.0，其目标列表尚未包含 AtomCode；上面的 `--all` 不会替代本节安装步骤，也不要使用未经支持的 `-a atomcode`。
 
-**从 AtomGit 公开仓库安装**（macOS / Linux，仅需 Git，无需登录）：
+**从 GitHub 公开仓库安装**（macOS / Linux，仅需 Git，无需登录）：
 
 ```bash
 mkdir -p "${ATOMCODE_HOME:-$HOME/.atomcode}/skills"
-git clone https://atomgit.com/Cacinie/pixel-art-web-design.git \
+git clone https://github.com/CacinieP/pixel-art-web-design.git \
   "${ATOMCODE_HOME:-$HOME/.atomcode}/skills/pixel-art-web-design"
 ```
 
-**ZIP 安装**：在 [AtomGit 仓库](https://atomgit.com/Cacinie/pixel-art-web-design) 点击“下载zip”。解压后，将直接包含 `SKILL.md` 和 `references/` 的文件夹重命名为 `pixel-art-web-design`，再将整个文件夹放入 `${ATOMCODE_HOME:-$HOME/.atomcode}/skills/`。默认安装结果应为 `~/.atomcode/skills/pixel-art-web-design/SKILL.md`，并保留同层 `references/`。
+**ZIP 安装**：在 [GitHub 仓库](https://github.com/CacinieP/pixel-art-web-design) 点击 Code → Download ZIP。解压后，将直接包含 `SKILL.md` 和 `references/` 的文件夹重命名为 `pixel-art-web-design`，再将整个文件夹放入 `${ATOMCODE_HOME:-$HOME/.atomcode}/skills/`。默认安装结果应为 `~/.atomcode/skills/pixel-art-web-design/SKILL.md`，并保留同层 `references/`。
 
 Windows 可将文件夹放入 `%USERPROFILE%\.atomcode\skills\`；若已设置 `ATOMCODE_HOME`，则使用该目录下的 `skills`。上述克隆命令用于首次安装；已有同名目录时请按“更新与卸载”操作。
 
 ### 先克隆，再从本地安装
 
-公开仓库地址：[Cacinie/pixel-art-web-design](https://atomgit.com/Cacinie/pixel-art-web-design)。在一个尚无同名目录的位置执行，无需配置 AtomGit 凭据：
-
-```bash
-git clone https://atomgit.com/Cacinie/pixel-art-web-design.git
-npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
-```
-
-无法访问 AtomGit 时，可改用同样公开的 GitHub 仓库（含可玩游戏与 GitHub Pages 部署）：
+公开仓库地址：[CacinieP/pixel-art-web-design](https://github.com/CacinieP/pixel-art-web-design)。在一个尚无同名目录的位置执行，无需配置 GitHub 凭据：
 
 ```bash
 git clone https://github.com/CacinieP/pixel-art-web-design.git
+npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 ```
 
 要安装到 CLI 支持的所有 Agent，将最后的 `-a pi codex claude-code opencode -y` 换为 `--all`；AtomCode 使用上面的直接安装步骤。
@@ -106,14 +74,12 @@ git clone https://github.com/CacinieP/pixel-art-web-design.git
 **固定到已发布版本**：将第一条克隆命令替换为下面这条，再从本地目录安装。固定版本不会自动跟随 `main` 更新。
 
 ```bash
-git clone --branch v1.0.1 --depth 1 https://atomgit.com/Cacinie/pixel-art-web-design.git
+git clone --branch v1.0.1 --depth 1 https://github.com/CacinieP/pixel-art-web-design.git
 ```
 
-该标签在 GitHub 仓库上同样可用，可将地址替换为 `https://github.com/CacinieP/pixel-art-web-design.git`。
+## 从 GitHub 源码 ZIP 安装：无需 Node.js 或 Git
 
-## 从 AtomGit 源码 ZIP 安装：无需 Node.js 或 Git
-
-1. 打开 [AtomGit 公开仓库](https://atomgit.com/Cacinie/pixel-art-web-design)，在代码页点击“下载zip”。默认下载当前分支源码；需要固定版本时，先切换到目标标签。
+1. 打开 [GitHub 公开仓库](https://github.com/CacinieP/pixel-art-web-design)，在代码页点击 Code → Download ZIP。默认下载当前分支源码；需要固定版本时，先切换到目标标签。
 2. 解压，将直接包含 `SKILL.md` 和 `references/` 的文件夹重命名为 `pixel-art-web-design`。下载的文件名和解压目录可能带有分支名或版本后缀，以实际内容为准。
 3. 将**整个文件夹**放入下表中目标 Agent 的技能目录，保留 `references/`。
 4. 在 Agent 中重新加载技能或开始新会话，再按下文调用。
@@ -215,7 +181,7 @@ Claude Code 可使用 `/pixel-art-web-design`。其他 Agent 可以在提示中�
 - **本地克隆安装（跟随 main）**：先在仓库目录执行 `git pull --ff-only` 获取远程更新，再重新运行本地 `skills add` 命令。
 - **AtomCode 直接克隆安装（跟随 main）**：在其 `skills/pixel-art-web-design/` 目录执行 `git pull --ff-only` 即可，无需再运行 `skills add`。
 - **固定 Tag 安装**：下载或克隆目标新版本后重新安装；固定 Tag 的检出不使用 `git pull` 更新。
-- **ZIP 安装**：从 AtomGit 下载最新源码 ZIP，备份并移走原技能文件夹，再放入新版，避免新旧参考文件混用。
+- **ZIP 安装**：从 GitHub 下载最新源码 ZIP，备份并移走原技能文件夹，再放入新版，避免新旧参考文件混用。
 - **CLI 卸载**：使用下面的命令，仅移除这个技能：
 
 ```bash
@@ -226,13 +192,13 @@ npx skills remove pixel-art-web-design -g -a '*'
 
 ## 常见问题
 
-**克隆失败或要求登录？** AtomGit 仓库与 GitHub 仓库均为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git` 或 `https://github.com/CacinieP/pixel-art-web-design.git`，并确认网络可以访问对应站点。
+**克隆失败或要求登录？** GitHub 仓库与 GitHub 仓库均为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://github.com/CacinieP/pixel-art-web-design.git`，并确认网络可以访问对应站点。
 
 **Agent 找不到技能？** 检查安装作用域、目录层级、文件名 `SKILL.md`，以及是否需要重新加载。Pi 使用 `/reload`；其他工具可重开会话，仍未刷新时重启客户端。
 
 **Pi 没有 `/skill:` 命令补全？** 检查 Pi 设置中的 `enableSkillCommands` 是否开启；关闭补全时仍可尝试输入完整命令，详见 Pi 官方文档。
 
-**符号链接安装失败？** 给 `skills add` 添加 `--copy`，或直接使用 AtomGit 源码 ZIP 手动安装。
+**符号链接安装失败？** 给 `skills add` 添加 `--copy`，或直接使用 GitHub 源码 ZIP 手动安装。
 
 **`skills --all` 后 AtomCode 仍找不到？** CLI 1.7.0 尚未包含 AtomCode 目标，请使用本页的 AtomCode 直接安装步骤。
 
@@ -244,7 +210,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 - [`references/bevel-system.md`](./references/bevel-system.md)：凸起 / 按下两种像素倒角与阴影规则。
 - [`references/palette-construction.md`](./references/palette-construction.md)：色阶构建、四组预设色板与颜色数量约束。
 
-源码维护在 AtomGit 的 `main` 分支，并同步公开镜像到 [GitHub](https://github.com/CacinieP/pixel-art-web-design)（含可玩游戏与 GitHub Pages 部署）；固定版本通过标签提供；源码 ZIP 可从任一仓库的代码页下载，不提交到主分支。
+源码维护在 [GitHub](https://github.com/CacinieP/pixel-art-web-design) 的 `main` 分支；固定版本通过标签提供。配套游戏在 [lantern-post](https://github.com/CacinieP/lantern-post) 独立维护。
 
 ## License
 
