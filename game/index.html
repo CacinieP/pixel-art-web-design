@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="萤灯邮差是一款温暖的像素风投递小游戏：找回散落的信，点亮暮色群岛的回家路。">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>萤灯邮差 · Lantern Post</title>
+  <link rel="preload" href="fonts/fusion-pixel-12px-proportional-zh_hans.otf.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%231a1a2e'/%3E%3Crect x='2' y='4' width='12' height='8' fill='%23f2c14e'/%3E%3Cpath d='M2 4h12L8 9z' fill='%23e86a5a'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#game-title">跳到游戏</a>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg class="pixel-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="#1a1a2e" d="M1 3h14v10H1z"/><path fill="#f4f1e8" d="M2 4h12v8H2z"/><path fill="#e86a5a" d="M2 4h12L8 9z"/><path fill="#f2c14e" d="M7 8h2v2H7z"/></svg>
+      </span>
+      <span>LANTERN POST</span>
+    </div>
+    <div class="header-actions">
+      <button class="button button--small" id="sound-button" type="button" aria-pressed="true" aria-label="声音开关">
+        <svg class="pixel-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M2 6h3l4-4v12l-4-4H2z"/><path id="sound-waves" fill="currentColor" d="M11 5h2v6h-2zM14 3h1v10h-1z"/></svg>
+        <span id="sound-label">声音 开</span>
+      </button>
+      <button class="button button--small" id="help-button" type="button">玩法</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="masthead">
+      <div>
+        <p class="eyebrow">A COZY PIXEL DELIVERY GAME</p>
+        <h1 id="game-title" tabindex="-1">萤灯邮差<span>LANTERN POST</span></h1>
+        <p>暮色群岛失去了光。找回散落的信，送到同色邮箱，点亮回家的路。</p>
+      </div>
+      <div class="record-chip" aria-label="历史最佳邮票">
+        <span>最佳邮票</span>
+        <strong id="best-score">0000</strong>
+      </div>
+    </div>
+
+    <div class="game-layout">
+      <section class="game-window" aria-labelledby="window-title">
+        <div class="window-chrome">
+          <span id="window-title">── 暮色群岛 · 投递终端 ──</span>
+          <span class="chrome-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+        </div>
+        <div class="hud-bar">
+          <div class="hud-group" aria-label="生命值">
+            <span class="hud-label">灯芯</span>
+            <span class="hearts" id="hearts"></span>
+          </div>
+          <div class="hud-group">
+            <svg class="pixel-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="#1a1a2e" d="M1 3h14v10H1z"/><path fill="#f4f1e8" d="M2 4h12v8H2z"/><path fill="#e86a5a" d="M2 4h12L8 9z"/></svg>
+            <span class="hud-label">投递</span>
+            <span class="hud-value" id="mail-count">0/3</span>
+          </div>
+          <div class="hud-group">
+            <svg class="pixel-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="#1a1a2e" d="M3 1h10v14H3z"/><path fill="#f2c14e" d="M4 2h8v12H4z"/><path fill="#c98a3a" d="M6 4h4v4H6z"/><path fill="#1a1a2e" d="M6 10h4v1H6z"/></svg>
+            <span class="hud-label">邮票</span>
+            <span class="hud-value" id="score">0000</span>
+          </div>
+          <div class="hud-group">
+            <span class="hud-label">邮路</span>
+            <span class="hud-value" id="chapter-count">1/3</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrap" id="canvas-wrap">
+          <canvas id="game" width="480" height="300" tabindex="0" aria-label="萤灯邮差游戏画面" aria-describedby="game-instructions">
+            你的浏览器不支持 Canvas。请使用最新版 Chrome、Firefox、Safari 或 Edge 游玩。
+          </canvas>
+          <div class="intro-card" id="intro-card">
+            <img class="portrait" src="sprites/postmaster.png" alt="" width="64" height="64">
+            <div>
+              <h2>夜班开始</h2>
+              <p>三封信，三扇窗。避开迷雾，把光送回去。</p>
+              <button class="button button--primary" id="start-button" type="button">开始投递</button>
+            </div>
+          </div>
+          <div class="toast" id="toast" hidden aria-hidden="true"></div>
+          <div class="touch-controls" aria-label="触屏控制">
+            <div class="dpad">
+              <button class="button button--small" type="button" data-dir="up" aria-label="向上">↑</button>
+              <button class="button button--small" type="button" data-dir="left" aria-label="向左">←</button>
+              <button class="button button--small" type="button" data-dir="down" aria-label="向下">↓</button>
+              <button class="button button--small" type="button" data-dir="right" aria-label="向右">→</button>
+            </div>
+            <div class="touch-actions">
+              <button class="button button--sea" id="touch-dash" type="button" aria-label="冲刺">冲</button>
+              <button class="button button--gold" id="touch-action" type="button" aria-label="投递或互动">投</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <div class="key-hints" id="game-instructions">
+            <span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> 移动</span>
+            <span><kbd>E</kbd> / <kbd>空格</kbd> 投递</span>
+            <span><kbd>Shift</kbd> 冲刺</span>
+            <span><kbd>P</kbd> 暂停</span>
+          </div>
+          <div class="control-actions">
+            <button class="button button--small" id="pause-button" type="button" disabled>暂停</button>
+            <button class="button button--small" id="restart-button" type="button">重新开始</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar" aria-label="投递信息">
+        <section class="panel" aria-labelledby="route-title">
+          <div class="panel-title">
+            <h2 id="route-title">今夜邮路</h2>
+            <span id="route-state">待出发</span>
+          </div>
+          <p class="route-name" id="route-name">苔光庭院</p>
+          <progress class="progress" id="route-progress" max="3" value="0" aria-label="本邮路投递进度"></progress>
+          <ul class="delivery-list" id="delivery-list"></ul>
+          <p class="compass-hint" id="compass-hint">按下「开始投递」，萤石会指向最近的信。</p>
+        </section>
+
+        <section class="panel" aria-labelledby="satchel-title">
+          <h2 id="satchel-title">邮差背包</h2>
+          <div class="stat-row"><span>已送达</span><strong id="total-delivered">0 封</strong></div>
+          <div class="stat-row"><span>用时</span><strong id="elapsed">00:00</strong></div>
+          <div class="stat-row"><span>冲刺</span><strong id="dash-state">就绪</strong></div>
+          <div class="upgrade-chips" id="upgrade-chips"><span class="hint">还没有护符</span></div>
+        </section>
+
+        <section class="panel" aria-labelledby="setup-title">
+          <h2 id="setup-title">出发准备</h2>
+          <div class="field">
+            <label for="difficulty">难度</label>
+            <select class="select" id="difficulty">
+              <option value="cozy">悠闲 · 5 灯芯</option>
+              <option value="normal" selected>标准 · 3 灯芯</option>
+              <option value="brave">勇敢 · 2 灯芯</option>
+            </select>
+            <p class="hint" id="difficulty-hint">新一局开始前可调整。</p>
+          </div>
+          <div class="field">
+            <button class="button button--small" id="motion-button" type="button" aria-pressed="false">动效 开</button>
+            <p class="hint">减少动效会冻结闪烁、粒子和镜头震动。</p>
+          </div>
+          <div class="stat-row"><span>完成投递</span><strong id="wins">0 次</strong></div>
+        </section>
+
+        <section class="panel" aria-labelledby="note-title">
+          <h2 id="note-title">邮局长留言</h2>
+          <div class="note">
+            <img class="portrait" src="sprites/postmaster.png" alt="" width="48" height="48">
+            <p id="postmaster-note">跟着金色萤石走，信会找到回家的路。</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="site-footer">
+      <span>20 色 · 16px 瓦片 · 原创像素精灵</span>
+      <span>基于 <a href="https://github.com/CacinieP/pixel-art-web-design">pixel-art-web-design</a> 构建</span>
+    </footer>
+  </main>
+
+  <dialog class="dialog-box" id="help-dialog" aria-labelledby="help-title">
+    <div class="dialog-head">
+      <img class="portrait" src="sprites/postmaster.png" alt="" width="64" height="64">
+      <div>
+        <h2 id="help-title">怎样投递</h2>
+        <p>每条邮路有 3 封散落的信和 3 个同色邮箱。</p>
+      </div>
+    </div>
+    <ol class="help-list">
+      <li>走近发光的信即可拾取；金色箭头会指向下一个目标。</li>
+      <li>背着信走到同色邮箱旁，按 <kbd>E</kbd> 或 <kbd>空格</kbd> 投递。</li>
+      <li>全部送达后，走进右侧的邮路门前往下一座岛。</li>
+      <li>迷雾团会熄灭灯芯。<kbd>Shift</kbd> 冲刺可短暂无敌，冲刺后需要恢复。</li>
+      <li>每条邮路结束可选择一件护符；三条邮路全部完成即获胜。</li>
+    </ol>
+    <div class="dialog-actions">
+      <button class="button button--primary" id="help-close" type="button">明白了</button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog-box" id="pause-dialog" aria-labelledby="pause-title">
+    <div class="dialog-head">
+      <img class="portrait" src="sprites/postmaster.png" alt="" width="64" height="64">
+      <div>
+        <h2 id="pause-title">歇一歇</h2>
+        <p>灯还亮着，路不会跑。</p>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <button class="button button--primary" id="resume-button" type="button">继续投递</button>
+      <button class="button" id="pause-restart" type="button">重新开始</button>
+    </div>
+  </dialog>
+
+  <dialog class="dialog-box" id="upgrade-dialog" aria-labelledby="upgrade-title">
+    <div class="dialog-head">
+      <img class="portrait" src="sprites/postmaster.png" alt="" width="64" height="64">
+      <div>
+        <h2 id="upgrade-title">邮路奖励</h2>
+        <p>选一件护符，带上下一座岛。</p>
+      </div>
+    </div>
+    <div class="upgrade-options" id="upgrade-options"></div>
+  </dialog>
+
+  <dialog class="dialog-box" id="result-dialog" aria-labelledby="result-title">
+    <div class="dialog-head">
+      <img class="portrait" src="sprites/postmaster.png" alt="" width="64" height="64">
+      <div>
+        <h2 id="result-title">今夜送达</h2>
+        <p id="result-copy"></p>
+      </div>
+    </div>
+    <div class="result-stats">
+      <div><span>邮票</span><strong id="result-score">0</strong></div>
+      <div><span>送达</span><strong id="result-mail">0</strong></div>
+      <div><span>用时</span><strong id="result-time">00:00</strong></div>
+    </div>
+    <p id="result-best"></p>
+    <div class="dialog-actions">
+      <button class="button button--primary" id="result-restart" type="button">再送一夜</button>
+    </div>
+  </dialog>
+
+  <p class="visually-hidden" id="announcer" aria-live="polite" aria-atomic="true"></p>
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

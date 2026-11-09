@@ -2,17 +2,28 @@
 
 把一句需求变成风格一致的像素风网页：从网格、配色、字体、精灵缩放，到按钮、面板、动效与交付检查。
 
-这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。它提供设计流程和代码模式，不包含可直接启动的网站、字体或图片素材。
+这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。根目录提供设计流程和代码模式；`game/` 提供基于该技能构建的可运行游戏示例。
 
 [开源仓库（GitHub）](https://github.com/CacinieP/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
 
-## 使用示例
+## 游戏示例：萤灯邮差 · Lantern Post
 
-[萤灯邮差 · Lantern Post](https://github.com/CacinieP/lantern-post) 是用本技能构建的像素风游戏，已拆分到独立仓库。
+游戏完整源码、字体、精灵与预览图同步保存在本仓库的 [`game/`](game/) 中，独立游戏仓库也保留。
 
-[在线游玩](https://caciniep.github.io/lantern-post/) · [游戏源码与预览](https://github.com/CacinieP/lantern-post)
+[本仓库在线游玩](https://caciniep.github.io/pixel-art-web-design/) · [游戏源码与说明](game/README.md) · [独立游戏仓库](https://github.com/CacinieP/lantern-post)
 
-本仓库只维护一个设计技能及其参考文档，不包含游戏代码、字体、精灵素材或游戏部署流程。
+![桌面端预览](game/docs/preview-desktop.png)
+
+<img src="game/docs/preview-mobile.png" width="320" alt="移动端完整预览">
+
+```bash
+cd game
+npm run dev
+npm test
+npm run build
+```
+
+根目录仍只有一个 `SKILL.md` 技能入口；安装技能时请使用下方 GitHub 地址。Pages 工作流验证并构建 `game/`，只发布 `game/dist/`。
 
 ## 快速安装：选择你的 Agent
 
@@ -210,7 +221,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 - [`references/bevel-system.md`](./references/bevel-system.md)：凸起 / 按下两种像素倒角与阴影规则。
 - [`references/palette-construction.md`](./references/palette-construction.md)：色阶构建、四组预设色板与颜色数量约束。
 
-源码维护在 [GitHub](https://github.com/CacinieP/pixel-art-web-design) 的 `main` 分支；固定版本通过标签提供。配套游戏在 [lantern-post](https://github.com/CacinieP/lantern-post) 独立维护。
+源码维护在 [GitHub](https://github.com/CacinieP/pixel-art-web-design) 的 `main` 分支；固定版本通过标签提供。配套游戏同步保存在 [`game/`](game/) 与 [lantern-post](https://github.com/CacinieP/lantern-post) 独立仓库中。
 
 ## License
 

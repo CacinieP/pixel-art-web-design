@@ -1,0 +1,23 @@
+# Build artifacts
+pixel-art-web-design*.zip
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+*.qoder.site
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+*~
+.eslintcache
+.parcel-cache/
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# OS
+Thumbs.db
