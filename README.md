@@ -4,11 +4,45 @@
 
 这是一个遵循 [Agent Skills](https://agentskills.io) 格式的设计技能。入口是 `SKILL.md`，可供 AtomCode、Pi、Codex、Claude Code、OpenCode 等支持该格式的 Agent 加载；不依赖特定模型、MCP 服务或前端框架。它提供设计流程和代码模式，不包含可直接启动的网站、字体或图片素材。
 
-[公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
+[开源仓库（GitHub）](https://github.com/CacinieP/pixel-art-web-design) · [在线游玩（GitHub Pages）](https://caciniep.github.io/pixel-art-web-design/) · [公开仓库（AtomGit）](https://atomgit.com/Cacinie/pixel-art-web-design) · [完整设计流程](./SKILL.md) · [MIT 许可证](./LICENSE)
+
+## 可玩游戏：萤灯邮差 · Lantern Post
+
+本仓库现在包含一个按上述 SOP 完成的原创像素风投递游戏。暮色群岛失去了光，玩家扮演邮差，在三条邮路中找回 9 封信、投递到同色邮箱、选择护符升级，并点亮最终灯塔。游戏包含迷雾团敌人、冲刺无敌、灯芯生命、暂停、胜负结算、重新开始、本地最佳纪录、触屏方向键、程序化芯片音效与减少动效模式。
+
+在线游玩：<https://caciniep.github.io/pixel-art-web-design/>（GitHub Pages，桌面与移动端均可）。
+
+![桌面端预览](docs/preview-desktop.png)
+
+<img src="docs/preview-mobile.png" width="320" alt="移动端预览：触屏方向键与冲/投按钮">
+
+```bash
+pnpm dev      # http://127.0.0.1:5173
+pnpm test     # 核心规则与可达性测试
+pnpm build    # 生成 sprites/ 与 dist/
+```
+
+操作：WASD / 方向键移动，E / 空格投递，Shift 冲刺，P 暂停。移动端使用画面上的方向键与「冲 / 投」按钮。
+
+### 设计规格
+
+- **风格基底**：Family B · 暖色瓦片，改为暮色群岛氛围；16×16 源瓦片，统一 2× 整数渲染。
+- **四个滑块**：色阶深度 4；轮廓强度 70；动画预算 8（精灵循环、水波、萤石、粒子）；光源固定左上 45°。
+- **网格**：布局单位 `--unit: 4px`，细节像素 `--pixel: 1px`，槽位 `--tile: 16px`，间距 8px / 16px。
+- **色板（20 个不透明色）**：
+  - 中性：`#1a1a2e` `#3a3a55` `#f4f1e8` `#e8e2d0`
+  - 海雾：`#bfe3d0` `#6fb7a5` `#3d8078` `#245055`
+  - 琥珀：`#ffe6a3` `#f2c14e` `#c98a3a` `#7a5230`
+  - 珊瑚：`#ffb08a` `#e86a5a` `#b23a48` `#6e2740`
+  - 苔叶：`#d4e39a` `#94b86a` `#5a8055` `#335043`
+- **字体**：Fusion Pixel 12px proportional（简体中文，OFL，见 `fonts/OFL.txt` 与 `fonts/LICENSES/`）。
+- **精灵**：`sprites/world-atlas.png` 与 `sprites/postmaster.png` 由 `tools/build-sprites.mjs` 从索引色像素绘制生成；Canvas 与 img 均使用 `image-rendering: pixelated`。
+- **组件**：Panel、Button、ProgressBar、DialogBox、InventorySlot、HudBar、WindowChrome、SpriteFrame 均使用零模糊倒角与即时状态切换。
+- **默认偏离**：为让游戏视口在桌面与手机保持整数像素缩放，精灵渲染采用 2× 而非 Family B 默认 4×；场景使用暮色冷海 + 暖琥珀/珊瑚，而非纯农场暖色；模态背景使用不透明墨色以避免额外混色。
 
 ## 快速安装：选择你的 Agent
 
-使用第三方 [skills CLI](https://www.skills.sh/docs/cli) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 AtomGit 仓库，无需登录、Token 或仓库授权，默认安装 `main`。需要固定版本时，可使用下文的按版本克隆方式。
+使用第三方 [skills CLI](https://www.skills.sh/docs/cli) 安装，需要 Node.js（含 `npx`）和 Git。以下命令使用公开的 AtomGit 仓库，无需登录、Token 或仓库授权，默认安装 `main`；GitHub 开源仓库 `https://github.com/CacinieP/pixel-art-web-design.git` 可直接替换来源地址。需要固定版本时，可使用下文的按版本克隆方式。
 
 **交互选择要安装到哪些 Agent：**
 
@@ -61,6 +95,12 @@ git clone https://atomgit.com/Cacinie/pixel-art-web-design.git
 npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 ```
 
+无法访问 AtomGit 时，可改用同样公开的 GitHub 仓库（含可玩游戏与 GitHub Pages 部署）：
+
+```bash
+git clone https://github.com/CacinieP/pixel-art-web-design.git
+```
+
 要安装到 CLI 支持的所有 Agent，将最后的 `-a pi codex claude-code opencode -y` 换为 `--all`；AtomCode 使用上面的直接安装步骤。
 
 **固定到已发布版本**：将第一条克隆命令替换为下面这条，再从本地目录安装。固定版本不会自动跟随 `main` 更新。
@@ -68,6 +108,8 @@ npx skills add ./pixel-art-web-design -g -a pi codex claude-code opencode -y
 ```bash
 git clone --branch v1.0.1 --depth 1 https://atomgit.com/Cacinie/pixel-art-web-design.git
 ```
+
+该标签在 GitHub 仓库上同样可用，可将地址替换为 `https://github.com/CacinieP/pixel-art-web-design.git`。
 
 ## 从 AtomGit 源码 ZIP 安装：无需 Node.js 或 Git
 
@@ -184,7 +226,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 
 ## 常见问题
 
-**克隆失败或要求登录？** 本仓库为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git`，并确认网络可以访问 AtomGit。
+**克隆失败或要求登录？** AtomGit 仓库与 GitHub 仓库均为公开仓库，克隆无需登录或 Token。请检查地址是否为 `https://atomgit.com/Cacinie/pixel-art-web-design.git` 或 `https://github.com/CacinieP/pixel-art-web-design.git`，并确认网络可以访问对应站点。
 
 **Agent 找不到技能？** 检查安装作用域、目录层级、文件名 `SKILL.md`，以及是否需要重新加载。Pi 使用 `/reload`；其他工具可重开会话，仍未刷新时重启客户端。
 
@@ -202,7 +244,7 @@ npx skills remove pixel-art-web-design -g -a '*'
 - [`references/bevel-system.md`](./references/bevel-system.md)：凸起 / 按下两种像素倒角与阴影规则。
 - [`references/palette-construction.md`](./references/palette-construction.md)：色阶构建、四组预设色板与颜色数量约束。
 
-源码维护在 AtomGit 的 `main` 分支，固定版本通过标签提供；源码 ZIP 可从仓库代码页下载，不提交到主分支。
+源码维护在 AtomGit 的 `main` 分支，并同步公开镜像到 [GitHub](https://github.com/CacinieP/pixel-art-web-design)（含可玩游戏与 GitHub Pages 部署）；固定版本通过标签提供；源码 ZIP 可从任一仓库的代码页下载，不提交到主分支。
 
 ## License
 
